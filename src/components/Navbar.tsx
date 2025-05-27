@@ -35,9 +35,9 @@ export const Navbar: React.FC = () => {
       
       <Button 
         className="ml-4 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
-        onClick={() => navigate('/payment')}
+        onClick={() => navigate('/login')}
       >
-        Book a Session →
+        Login / Sign Up
       </Button>
     </nav>
   );

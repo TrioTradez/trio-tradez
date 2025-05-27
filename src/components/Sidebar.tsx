@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Book, User, Video, FileText } from 'lucide-react';
+import { Home, Book, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 
@@ -9,7 +9,7 @@ export const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const menuItems = [
-    { icon: Home, label: 'Home', path: '/' },
+    { icon: Home, label: 'Dashboard', path: '/dashboard' },
     { icon: Book, label: 'Library', path: '/library' },
     { icon: User, label: 'Profile', path: '/profile' },
   ];

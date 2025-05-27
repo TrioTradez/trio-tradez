@@ -20,7 +20,7 @@ export const Login: React.FC = () => {
     
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
     } finally {
@@ -44,7 +44,7 @@ export const Login: React.FC = () => {
               <TrendingUp className="w-8 h-8 text-primary" />
               <h1 className="text-2xl font-bold gradient-text">TradeMaster</h1>
             </div>
-            <p className="text-muted-foreground">Welcome to your trading education platform</p>
+            <p className="text-muted-foreground">Access your trading education platform</p>
           </div>
 
           {/* Demo Buttons */}
@@ -108,6 +108,15 @@ export const Login: React.FC = () => {
             Don't have an account?{' '}
             <button className="text-primary hover:text-primary/80">
               Sign up here
+            </button>
+          </div>
+          
+          <div className="mt-4 text-center">
+            <button 
+              onClick={() => navigate('/')}
+              className="text-sm text-muted-foreground hover:text-primary"
+            >
+              ← Back to website
             </button>
           </div>
         </div>
