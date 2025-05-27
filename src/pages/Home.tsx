@@ -2,6 +2,7 @@
 import React from 'react';
 import { TrendingUp, Award, BookOpen, Users } from 'lucide-react';
 import { CourseCard } from '../components/CourseCard';
+import { HeroSection } from '../components/HeroSection';
 import { mockCourses } from '../data/mockData';
 import { useAuthStore } from '../store/authStore';
 
@@ -10,27 +11,9 @@ export const Home: React.FC = () => {
   const featuredCourses = mockCourses.slice(0, 3);
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="glass-card rounded-xl p-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">
-              Welcome back, {user?.name}! 👋
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Continue your trading education journey
-            </p>
-          </div>
-          <div className="hidden md:block">
-            <img 
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop"
-              alt="Trading charts"
-              className="rounded-lg opacity-80"
-            />
-          </div>
-        </div>
-      </div>
+    <div className="space-y-16">
+      {/* Hero Section */}
+      <HeroSection />
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
