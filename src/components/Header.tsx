@@ -5,7 +5,6 @@ import { useAuthStore } from '../store/authStore';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Navbar } from './Navbar';
 
 export const Header: React.FC = () => {
   const { user } = useAuthStore();
@@ -13,13 +12,6 @@ export const Header: React.FC = () => {
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold gradient-text">TradeMaster</h1>
-          </div>
-          <Navbar />
-        </div>
-        
         <div className="flex items-center gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -28,7 +20,9 @@ export const Header: React.FC = () => {
               className="pl-10 bg-background/50 w-64"
             />
           </div>
-          
+        </div>
+        
+        <div className="flex items-center gap-4">
           {!user?.isPremium && (
             <Button variant="outline" className="bg-gradient-to-r from-primary to-accent text-white border-0">
               Upgrade to Premium
