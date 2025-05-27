@@ -1,0 +1,52 @@
+
+import React from 'react';
+import { Bell, Search } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+
+export const Header: React.FC = () => {
+  const { user } = useAuthStore();
+
+  return (
+    <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center gap-4 flex-1 max-w-md">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search courses, videos..."
+              className="pl-10 bg-background/50"
+            />
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          {!user?.isPremium && (
+            <Button variant="outline" className="bg-gradient-to-r from-primary to-accent text-white border-0">
+              Upgrade to Premium
+            </Button>
+          )}
+          
+          <Button variant="ghost" size="icon">
+            <Bell className="w-5 h-5" />
+          </Button>
+          
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarImage src={user?.avatar} />
+              <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="text-sm">
+              <p className="font-medium">{user?.name}</p>
+              <p className="text-muted-foreground">
+                {user?.isPremium ? 'Premium Member' : 'Free Member'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
