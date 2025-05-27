@@ -15,7 +15,7 @@ export const About: React.FC = () => {
       {/* Hero Section */}
       <div className="text-center max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          About <span className="text-yellow-400">TradeMaster</span>
+          About <span className="text-yellow-400">TrioTradez</span>
         </h1>
         <p className="text-xl text-muted-foreground mb-8">
           Empowering traders worldwide with proven strategies, comprehensive education, 
@@ -47,7 +47,7 @@ export const About: React.FC = () => {
           <h2 className="text-3xl font-bold mb-8 text-center">Our Story</h2>
           <div className="space-y-6 text-lg text-muted-foreground">
             <p>
-              Founded with a mission to democratize trading education, TradeMaster began as a 
+              Founded with a mission to democratize trading education, TrioTradez began as a 
               small initiative to share proven trading strategies with aspiring traders. Over 
               the years, we've evolved into a comprehensive educational platform that serves 
               traders across 20+ countries.

@@ -42,7 +42,7 @@ export const Login: React.FC = () => {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <TrendingUp className="w-8 h-8 text-primary" />
-              <h1 className="text-2xl font-bold gradient-text">TradeMaster</h1>
+              <h1 className="text-2xl font-bold gradient-text">TrioTradez</h1>
             </div>
             <p className="text-muted-foreground">Access your trading education platform</p>
           </div>
