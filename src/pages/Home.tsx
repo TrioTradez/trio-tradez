@@ -1,12 +1,10 @@
+
 import React from 'react';
 import { TrendingUp, Award, BookOpen, Users } from 'lucide-react';
-import { CourseCard } from '../components/CourseCard';
 import { HeroSection } from '../components/HeroSection';
-import { mockCourses } from '../data/mockData';
+import { PricingPlans } from '../components/PricingPlans';
 
 export const Home: React.FC = () => {
-  const featuredCourses = mockCourses.slice(0, 3);
-
   return (
     <div className="space-y-16 max-w-[1400px] mx-auto">
       {/* Hero Section */}
@@ -36,21 +34,8 @@ export const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Featured Courses */}
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Featured Courses</h2>
-          <button className="text-primary hover:text-primary/80 font-medium">
-            View All →
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {featuredCourses.map(course => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
-      </div>
+      {/* Pricing Plans */}
+      <PricingPlans />
     </div>
   );
 };

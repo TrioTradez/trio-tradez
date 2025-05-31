@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       name: 'Alex Trader',
       email,
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      isPremium: email.includes('premium'),
+      isPremium: email.includes('premium') || email.includes('pro'),
       joinDate: '2024-01-15',
       coursesCompleted: 3
     };

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from './ui/button';
 import { TrendingUp, BookOpen, Shield, BarChart3 } from 'lucide-react';
@@ -56,17 +57,17 @@ export const HeroSection: React.FC = () => {
             <Button 
               size="lg"
               className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-6 text-lg w-full sm:w-auto"
-              onClick={() => navigate('/payment')}
+              onClick={() => navigate('/login')}
             >
-              Book a Session →
+              Start Learning →
             </Button>
             <Button 
               size="lg"
               variant="outline"
               className="px-8 py-6 text-lg w-full sm:w-auto"
-              onClick={() => navigate('/library')}
+              onClick={() => navigate('/about')}
             >
-              Explore Courses
+              Learn More
             </Button>
           </div>
         </div>
@@ -75,7 +76,7 @@ export const HeroSection: React.FC = () => {
         <div className="flex-1 w-full lg:max-w-md">
           <div className="glass-card p-6 sm:p-8 rounded-2xl">
             <h3 className="text-xl sm:text-2xl font-bold mb-6 text-yellow-400">
-              Why Choose TradeMaster?
+              Why Choose TrioTradez?
             </h3>
             
             <div className="space-y-6">
