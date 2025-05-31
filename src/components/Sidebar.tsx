@@ -17,7 +17,7 @@ export const Sidebar: React.FC = () => {
   return (
     <div className="w-64 bg-card border-r border-border">
       <div className="p-6">
-        <h1 className="text-2xl font-bold gradient-text">TrioTradez</h1>
+        <h1 className="text-2xl font-bold gradient-text">TrioTradez Academy </h1>
         <p className="text-sm text-muted-foreground mt-1">Education Platform</p>
       </div>
       
