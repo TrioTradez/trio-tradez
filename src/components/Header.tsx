@@ -1,33 +1,24 @@
-
 import React from 'react';
 import { Bell, Search } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-
 export const Header: React.FC = () => {
-  const { user } = useAuthStore();
-
-  return (
-    <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+  const {
+    user
+  } = useAuthStore();
+  return <header className="border-b border-border bg-card/50 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Search courses..."
-              className="pl-10 bg-background/50 w-64"
-            />
+            <Input placeholder="Search courses..." className="pl-10 bg-background/50 w-64" />
           </div>
         </div>
         
         <div className="flex items-center gap-4">
-          {!user?.isPremium && (
-            <Button variant="outline" className="bg-gradient-to-r from-primary to-accent text-white border-0">
-              Upgrade to Premium
-            </Button>
-          )}
+          {!user?.isPremium}
           
           <Button variant="ghost" size="icon">
             <Bell className="w-5 h-5" />
@@ -47,6 +38,5 @@ export const Header: React.FC = () => {
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 };
