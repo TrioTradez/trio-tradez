@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { Check, Star, Crown } from 'lucide-react';
+import { Check, Star, Crown, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const PricingPlans: React.FC = () => {
