@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TrendingUp, Award, BookOpen, Users } from 'lucide-react';
 import { CourseCard } from '../components/CourseCard';
@@ -9,12 +8,12 @@ export const Home: React.FC = () => {
   const featuredCourses = mockCourses.slice(0, 3);
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-16 max-w-[1400px] mx-auto">
       {/* Hero Section */}
       <HeroSection />
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         <div className="glass-card p-6 text-center">
           <TrendingUp className="w-8 h-8 mx-auto mb-3 text-primary" />
           <h3 className="text-2xl font-bold">500+</h3>
@@ -46,7 +45,7 @@ export const Home: React.FC = () => {
           </button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {featuredCourses.map(course => (
             <CourseCard key={course.id} course={course} />
           ))}

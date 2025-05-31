@@ -16,20 +16,20 @@ export const Contact: React.FC = () => {
     {
       icon: Mail,
       title: 'Email Us',
-      details: 'support@trademaster.com',
+      details: <a href="mailto:info@triotradez.com">info@triotradez.com</a>,
       description: 'Get in touch for any questions or support'
     },
     {
       icon: Phone,
       title: 'Call Us',
-      details: '+1 (555) 123-4567',
+      details: <a href="tel:+233598268790">+233 59 826 8790</a>,
       description: 'Available Monday to Friday, 9 AM - 6 PM'
     },
     {
       icon: MapPin,
       title: 'Visit Us',
-      details: '123 Trading Street, Finance District',
-      description: 'New York, NY 10001'
+      details: <a href="https://goo.gl/maps/123TradingStreet">Accra, Ghana</a>,
+      description: 'Accra, Ghana'
     },
     {
       icon: Clock,
@@ -78,22 +78,22 @@ export const Contact: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" placeholder="John" required />
+                <Input id="firstName" placeholder="First Name" required />
               </div>
               <div>
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" placeholder="Doe" required />
+                <Input id="lastName" placeholder="Last Name" required />
               </div>
             </div>
             
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="john@example.com" required />
+              <Input id="email" type="email" placeholder="Email" required />
             </div>
             
             <div>
               <Label htmlFor="subject">Subject</Label>
-              <Input id="subject" placeholder="How can we help you?" required />
+              <Input id="subject" placeholder="Subject" required />
             </div>
             
             <div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +22,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="bg-card/80 backdrop-blur-sm border-t border-border mt-16">
-      <div className="container mx-auto px-6 py-12">
+      <div className="container mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
@@ -72,15 +71,15 @@ export const Footer: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">info@triotradez.com</span>
+                <span className="text-sm"><a href="mailto:">info@triotradez.com</a></span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
-                <span className="text-sm">+1 (555) 123-4567</span>
+                <span className="text-sm"><a href="tel:+233598268790">+233 (59) 826-8790</a></span> 
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="w-4 h-4" />
-                <span className="text-sm">New York, NY</span>
+                <span className="text-sm">Accra, Ghana</span>
               </div>
             </div>
           </div>
@@ -89,7 +88,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Section */}
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 TrioTradez. All rights reserved.
+            © 2025 TrioTradez. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
@@ -104,3 +103,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+

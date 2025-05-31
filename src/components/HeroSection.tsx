@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from './ui/button';
 import { TrendingUp, BookOpen, Shield, BarChart3 } from 'lucide-react';
@@ -38,25 +37,25 @@ export const HeroSection: React.FC = () => {
   ];
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative">
       {/* Main Hero Content */}
-      <div className="flex items-center justify-between mb-16">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 lg:gap-16 mb-16">
         <div className="flex-1 max-w-2xl">
-          <h1 className="text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             Trade Smarter.{' '}
             <span className="text-yellow-400">Profit Faster.</span>
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed">
             Expert forex trading training and digital marketing solutions to
             elevate your trading and business. Learn proven strategies that
             deliver results.
           </p>
           
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button 
               size="lg"
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-6 text-lg"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 py-6 text-lg w-full sm:w-auto"
               onClick={() => navigate('/payment')}
             >
               Book a Session →
@@ -64,7 +63,7 @@ export const HeroSection: React.FC = () => {
             <Button 
               size="lg"
               variant="outline"
-              className="px-8 py-6 text-lg"
+              className="px-8 py-6 text-lg w-full sm:w-auto"
               onClick={() => navigate('/library')}
             >
               Explore Courses
@@ -73,9 +72,9 @@ export const HeroSection: React.FC = () => {
         </div>
         
         {/* Features Panel */}
-        <div className="flex-1 max-w-md ml-16">
-          <div className="glass-card p-8 rounded-2xl">
-            <h3 className="text-2xl font-bold mb-6 text-yellow-400">
+        <div className="flex-1 w-full lg:max-w-md">
+          <div className="glass-card p-6 sm:p-8 rounded-2xl">
+            <h3 className="text-xl sm:text-2xl font-bold mb-6 text-yellow-400">
               Why Choose TradeMaster?
             </h3>
             
@@ -102,10 +101,10 @@ export const HeroSection: React.FC = () => {
       </div>
       
       {/* Stats Section */}
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
         {stats.map((stat, index) => (
           <div key={index} className="glass-card p-6 text-center rounded-xl">
-            <div className="text-3xl font-bold text-yellow-400 mb-2">
+            <div className="text-2xl sm:text-3xl font-bold text-yellow-400 mb-2">
               {stat.number}
             </div>
             <div className="text-sm text-muted-foreground">
