@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -8,15 +7,14 @@ import { Label } from '../components/ui/label';
 export const Contact: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Contact form submitted');
+    // Form submission is handled by Formspree
   };
 
   const contactInfo = [
     {
       icon: Mail,
       title: 'Email Us',
-      details: <a href="mailto:info@triotradez.com">info@triotradez.com</a>,
+      details: <a href="mailto:triotradez@gmail.com">triotradez@gmail.com</a>,
       description: 'Get in touch for any questions or support'
     },
     {
@@ -74,32 +72,58 @@ export const Contact: React.FC = () => {
         {/* Contact Form */}
         <div className="glass-card rounded-xl p-8">
           <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form 
+            action="https://formspree.io/f/manjwvpz" 
+            method="POST"
+            className="space-y-4"
+          >
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" placeholder="First Name" required />
+                <Input 
+                  id="firstName" 
+                  name="firstName"
+                  placeholder="First Name" 
+                  required 
+                />
               </div>
               <div>
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" placeholder="Last Name" required />
+                <Input 
+                  id="lastName" 
+                  name="lastName"
+                  placeholder="Last Name" 
+                  required 
+                />
               </div>
             </div>
             
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="Email" required />
+              <Input 
+                id="email" 
+                name="email"
+                type="email" 
+                placeholder="Email" 
+                required 
+              />
             </div>
             
             <div>
               <Label htmlFor="subject">Subject</Label>
-              <Input id="subject" placeholder="Subject" required />
+              <Input 
+                id="subject" 
+                name="subject"
+                placeholder="Subject" 
+                required 
+              />
             </div>
             
             <div>
               <Label htmlFor="message">Message</Label>
               <textarea 
                 id="message"
+                name="message"
                 placeholder="Tell us more about your inquiry..."
                 className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 required

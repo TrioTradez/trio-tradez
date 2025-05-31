@@ -71,7 +71,7 @@ export const Footer: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm"><a href="mailto:">info@triotradez.com</a></span>
+                <span className="text-sm"><a href="mailto:">triotradez@gmail.com</a></span>
               </div>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="w-4 h-4" />
