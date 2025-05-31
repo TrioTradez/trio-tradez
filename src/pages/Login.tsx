@@ -54,13 +54,13 @@ export const Login: React.FC = () => {
               variant="outline" 
               className="w-full"
             >
-              Demo Free Account
+              Basic Account
             </Button>
             <Button 
               onClick={() => demoLogin('premium')} 
               className="w-full trading-gradient text-white"
             >
-              Demo Premium Account
+              Premium Account
             </Button>
           </div>
 

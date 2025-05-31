@@ -37,6 +37,13 @@ export const HeroSection: React.FC = () => {
     { number: '7+', label: 'Years Experience' }
   ];
 
+  const scrollToPlans = () => {
+    const plansSection = document.getElementById('pricing-plans');
+    if (plansSection) {
+      plansSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative">
       {/* Main Hero Content */}
@@ -65,9 +72,9 @@ export const HeroSection: React.FC = () => {
               size="lg"
               variant="outline"
               className="px-8 py-6 text-lg w-full sm:w-auto"
-              onClick={() => navigate('/about')}
+              onClick={scrollToPlans}
             >
-              Learn More
+              View Plans
             </Button>
           </div>
         </div>

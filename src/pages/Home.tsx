@@ -35,7 +35,9 @@ export const Home: React.FC = () => {
       </div>
 
       {/* Pricing Plans */}
-      <PricingPlans />
+      <div id="pricing-plans">
+        <PricingPlans />
+      </div>
     </div>
   );
 };
