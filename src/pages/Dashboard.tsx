@@ -7,7 +7,8 @@ import { Library } from './Library';
 export const Dashboard: React.FC = () => {
   const { profile, isLoading } = useAuthStore();
 
-  console.log('Dashboard - Profile:', profile, 'Loading:', isLoading);
+  console.log('Dashboard render - Profile:', profile, 'Loading:', isLoading);
+  console.log('Is premium check:', profile?.is_premium);
 
   if (isLoading) {
     return (
@@ -20,12 +21,13 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  if (profile?.is_premium) {
-    console.log('Showing PremiumDashboard');
+  // Check if user is premium
+  if (profile?.is_premium === true) {
+    console.log('Rendering PremiumDashboard for premium user');
     return <PremiumDashboard />;
   }
 
-  console.log('Showing Library (basic dashboard)');
+  console.log('Rendering Library for basic user');
   // For basic users, show the library as the main dashboard
   return <Library />;
 };

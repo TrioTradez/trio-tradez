@@ -35,7 +35,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   fetchProfile: async () => {
     const { session } = get();
-    if (!session?.user) return;
+    if (!session?.user) {
+      console.log('No session or user found for profile fetch');
+      set({ isLoading: false });
+      return;
+    }
 
     try {
       console.log('Fetching profile for user:', session.user.id);
@@ -50,10 +54,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         if (error.code === 'PGRST116') {
           console.log('Profile not found, user might need to complete setup');
         }
+        set({ isLoading: false });
         return;
       }
 
-      console.log('Profile fetched:', profile);
+      console.log('Profile fetched successfully:', profile);
+      console.log('Is premium?', profile.is_premium);
       set({ 
         profile, 
         isAuthenticated: true,
@@ -89,19 +95,30 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signIn: async (email: string, password: string) => {
     try {
+      console.log('Attempting sign in for:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) return { error };
+      if (error) {
+        console.error('Sign in error:', error);
+        return { error };
+      }
 
-      // After successful sign in, fetch the profile immediately
+      console.log('Sign in successful, session:', data.session?.user?.email);
+      
+      // Set session immediately
+      set({ 
+        session: data.session, 
+        user: data.session?.user ?? null,
+        isLoading: true 
+      });
+
+      // Fetch profile immediately after successful sign in
       if (data.session?.user) {
-        console.log('Sign in successful, fetching profile...');
-        setTimeout(() => {
-          get().fetchProfile();
-        }, 100);
+        console.log('Fetching profile after sign in...');
+        await get().fetchProfile();
       }
 
       return { error: null };
@@ -118,7 +135,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         user: null, 
         session: null, 
         profile: null, 
-        isAuthenticated: false 
+        isAuthenticated: false,
+        isLoading: false
       });
     } catch (error) {
       console.error('Sign out error:', error);
@@ -147,6 +165,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   initialize: () => {
+    console.log('Initializing auth store...');
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -154,12 +174,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         
         set({ session, user: session?.user ?? null });
 
-        if (session?.user) {
-          // Fetch user profile with a small delay to ensure the session is fully established
+        if (session?.user && event === 'SIGNED_IN') {
+          console.log('User signed in, fetching profile...');
+          set({ isLoading: true });
+          // Small delay to ensure session is fully established
           setTimeout(() => {
             get().fetchProfile();
-          }, 200);
-        } else {
+          }, 100);
+        } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out');
           set({ 
             profile: null, 
             isAuthenticated: false,
@@ -171,12 +194,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session:', session?.user?.email);
+      console.log('Initial session check:', session?.user?.email);
       set({ session, user: session?.user ?? null });
       
       if (session?.user) {
+        console.log('Found existing session, fetching profile...');
         get().fetchProfile();
       } else {
+        console.log('No existing session found');
         set({ isLoading: false });
       }
     });
