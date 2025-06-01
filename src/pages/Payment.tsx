@@ -6,10 +6,12 @@ import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { useToast } from '../components/ui/use-toast';
 
 export const Payment: React.FC = () => {
   const navigate = useNavigate();
   const { upgradeToPremium } = useAuthStore();
+  const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleUpgrade = async () => {
@@ -18,12 +20,24 @@ export const Payment: React.FC = () => {
     // Simulate payment processing
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    upgradeToPremium();
-    setIsProcessing(false);
-    
-    // Show success and redirect
-    alert('Welcome to TradeMaster Premium! 🎉');
-    navigate('/');
+    try {
+      await upgradeToPremium();
+      setIsProcessing(false);
+      
+      toast({
+        title: "Welcome to Premium! 🎉",
+        description: "You now have access to all premium features.",
+      });
+      
+      navigate('/dashboard');
+    } catch (error) {
+      setIsProcessing(false);
+      toast({
+        title: "Upgrade failed",
+        description: "There was an error upgrading your account. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const features = [
@@ -55,7 +69,7 @@ export const Payment: React.FC = () => {
           <div className="glass-card rounded-xl p-8">
             <div className="text-center mb-8">
               <Crown className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
-              <h1 className="text-3xl font-bold mb-2">TradeMaster Premium</h1>
+              <h1 className="text-3xl font-bold mb-2">TrioTradez Premium</h1>
               <p className="text-muted-foreground">
                 Unlock advanced trading education and tools
               </p>
@@ -106,7 +120,7 @@ export const Payment: React.FC = () => {
 
               <div className="border-t border-border pt-6">
                 <div className="flex justify-between items-center mb-4">
-                  <span>TradeMaster Premium</span>
+                  <span>TrioTradez Premium</span>
                   <span className="font-semibold">$29.99</span>
                 </div>
                 <div className="flex justify-between items-center mb-6 text-lg font-bold">

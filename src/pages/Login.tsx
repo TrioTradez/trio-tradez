@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { TrendingUp, Mail, Lock, ArrowRight } from 'lucide-react';
+
+import React, { useState, useEffect } from 'react';
+import { TrendingUp, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { Alert, AlertDescription } from '../components/ui/alert';
 import { motion } from 'framer-motion';
 
 export const Login: React.FC = () => {
@@ -12,44 +14,84 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { login } = useAuthStore();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const { signIn, signUp, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
     setIsLoading(true);
+
     try {
       if (isSignUp) {
-        // Handle sign up logic
-        console.log('Sign up with:', { name, email, password });
+        if (password !== confirmPassword) {
+          setError('Passwords do not match');
+          return;
+        }
+
+        if (password.length < 6) {
+          setError('Password must be at least 6 characters long');
+          return;
+        }
+
+        const { error } = await signUp(email, password, fullName);
+        
+        if (error) {
+          if (error.message.includes('already registered')) {
+            setError('An account with this email already exists. Please sign in instead.');
+          } else {
+            setError(error.message);
+          }
+        } else {
+          setSuccess('Account created successfully! Please check your email for verification.');
+          setIsSignUp(false);
+          setEmail('');
+          setPassword('');
+          setFullName('');
+          setConfirmPassword('');
+        }
       } else {
-        await login(email, password);
-        navigate('/dashboard');
+        const { error } = await signIn(email, password);
+        
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            setError('Invalid email or password. Please check your credentials and try again.');
+          } else if (error.message.includes('Email not confirmed')) {
+            setError('Please check your email and click the confirmation link before signing in.');
+          } else {
+            setError(error.message);
+          }
+        } else {
+          navigate('/dashboard');
+        }
       }
     } catch (error) {
-      console.error('Authentication failed:', error);
+      console.error('Authentication error:', error);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleAuth = async () => {
-    try {
-      // Implement Google authentication
-      console.log('Google authentication');
-    } catch (error) {
-      console.error('Google auth failed:', error);
-    }
-  };
-
-  const demoLogin = (type: 'free' | 'premium') => {
+  const handleAccountTypeSelect = (type: 'basic' | 'premium') => {
     setIsSignUp(true);
     if (type === 'premium') {
       setEmail('premium@demo.com');
     } else {
-      setEmail('demo@example.com');
+      setEmail('basic@demo.com');
     }
   };
 
@@ -99,12 +141,27 @@ export const Login: React.FC = () => {
             </p>
           </motion.div>
 
+          {/* Error/Success Messages */}
+          {error && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {success && (
+            <Alert className="mb-6 border-green-200 bg-green-50 text-green-800">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{success}</AlertDescription>
+            </Alert>
+          )}
+
           {!isSignUp && (
             <>
               {/* Account Type Selection */}
               <div className="space-y-3 mb-6">
                 <Button
-                  onClick={() => demoLogin('free')}
+                  onClick={() => handleAccountTypeSelect('basic')}
                   variant="outline"
                   className="w-full group relative overflow-hidden"
                 >
@@ -112,7 +169,7 @@ export const Login: React.FC = () => {
                   <div className="absolute inset-0 bg-primary/10 transform translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
                 </Button>
                 <Button
-                  onClick={() => demoLogin('premium')}
+                  onClick={() => handleAccountTypeSelect('premium')}
                   className="w-full trading-gradient text-white group relative overflow-hidden"
                 >
                   <span className="relative z-10">Premium Account</span>
@@ -125,36 +182,21 @@ export const Login: React.FC = () => {
                   <span className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                  <span className="bg-card px-2 text-muted-foreground">Or continue with email</span>
                 </div>
               </div>
             </>
           )}
 
-          {/* Google Auth Button */}
-          <Button
-            onClick={handleGoogleAuth}
-            variant="outline"
-            className="w-full mb-6 relative group"
-          >
-            <img
-              src="https://www.google.com/favicon.ico"
-              alt="Google"
-              className="w-4 h-4 absolute left-4"
-            />
-            <span>{isSignUp ? 'Sign up with Google' : 'Sign in with Google'}</span>
-            <ArrowRight className="w-4 h-4 absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </Button>
-
           {/* Auth Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignUp && (
               <div>
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="fullName">Full Name</Label>
                 <Input
-                  id="name"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
+                  id="fullName"
+                  value={fullName}
+                  onChange={e => setFullName(e.target.value)}
                   placeholder="Enter your full name"
                   required
                 />
@@ -225,7 +267,11 @@ export const Login: React.FC = () => {
               <>
                 Already have an account?{' '}
                 <button
-                  onClick={() => setIsSignUp(false)}
+                  onClick={() => {
+                    setIsSignUp(false);
+                    setError(null);
+                    setSuccess(null);
+                  }}
                   className="text-primary hover:text-primary/80 font-medium"
                 >
                   Sign in here
@@ -235,7 +281,11 @@ export const Login: React.FC = () => {
               <>
                 Don't have an account?{' '}
                 <button
-                  onClick={() => setIsSignUp(true)}
+                  onClick={() => {
+                    setIsSignUp(true);
+                    setError(null);
+                    setSuccess(null);
+                  }}
                   className="text-primary hover:text-primary/80 font-medium"
                 >
                   Sign up here

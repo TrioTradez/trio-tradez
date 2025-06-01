@@ -8,12 +8,20 @@ import { Badge } from '../components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 
 export const Profile: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user, profile, signOut } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   const achievements = [
@@ -23,46 +31,58 @@ export const Profile: React.FC = () => {
     { title: 'Technical Analysis Pro', icon: Crown, earned: false },
   ];
 
+  if (!user || !profile) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Profile Header */}
       <div className="glass-card rounded-xl p-8">
         <div className="flex items-center gap-6 mb-6">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={user?.avatar} />
-            <AvatarFallback className="text-2xl">{user?.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={profile.avatar_url || undefined} />
+            <AvatarFallback className="text-2xl">
+              {(profile.full_name || user.email || 'U').charAt(0).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
           
           <div className="flex-1">
-            <h1 className="text-3xl font-bold mb-2">{user?.name}</h1>
-            <p className="text-muted-foreground mb-3">{user?.email}</p>
+            <h1 className="text-3xl font-bold mb-2">
+              {profile.full_name || user.email?.split('@')[0] || 'User'}
+            </h1>
+            <p className="text-muted-foreground mb-3">{user.email}</p>
             
             <div className="flex items-center gap-4">
-              <Badge variant={user?.isPremium ? "default" : "secondary"} className="trading-gradient text-white">
-                {user?.isPremium ? (
+              <Badge variant={profile.is_premium ? "default" : "secondary"} className="trading-gradient text-white">
+                {profile.is_premium ? (
                   <>
                     <Crown className="w-4 h-4 mr-1" />
                     Premium Member
                   </>
                 ) : (
-                  'Free Member'
+                  'Basic Member'
                 )}
               </Badge>
               
               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Calendar className="w-4 h-4" />
-                Joined {user?.joinDate}
+                Joined {formatDate(profile.created_at)}
               </div>
             </div>
           </div>
           
           <div className="text-right">
-            {!user?.isPremium && (
+            {!profile.is_premium && (
               <Button className="trading-gradient text-white mb-3" onClick={() => navigate('/payment')}>
                 Upgrade to Premium
               </Button>
             )}
-            <Button variant="outline" onClick={handleLogout}>
+            <Button variant="outline" onClick={handleSignOut}>
               Sign Out
             </Button>
           </div>
@@ -73,7 +93,7 @@ export const Profile: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="glass-card p-6 text-center">
           <BookOpen className="w-8 h-8 mx-auto mb-3 text-primary" />
-          <h3 className="text-2xl font-bold">{user?.coursesCompleted || 0}</h3>
+          <h3 className="text-2xl font-bold">3</h3>
           <p className="text-muted-foreground">Courses Completed</p>
         </div>
         <div className="glass-card p-6 text-center">

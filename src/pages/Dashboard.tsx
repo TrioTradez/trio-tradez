@@ -5,9 +5,9 @@ import { PremiumDashboard } from '../components/PremiumDashboard';
 import { Library } from './Library';
 
 export const Dashboard: React.FC = () => {
-  const { user } = useAuthStore();
+  const { profile } = useAuthStore();
 
-  if (user?.isPremium) {
+  if (profile?.is_premium) {
     return <PremiumDashboard />;
   }
 

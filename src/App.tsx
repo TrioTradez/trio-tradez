@@ -20,139 +20,159 @@ import { VideoPlayer } from "./pages/VideoPlayer";
 import { PDFViewer } from "./pages/PDFViewer";
 import { Payment } from "./pages/Payment";
 import NotFound from "./pages/NotFound";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 // Protected Route wrapper for education platform
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuthStore();
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route
-            path="/"
-            element={
-              <Layout>
-                <Home />
-              </Layout>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <Layout>
-                <About />
-              </Layout>
-            }
-          />
-          <Route
-            path="/services"
-            element={
-              <Layout>
-                <Services />
-              </Layout>
-            }
-          />
-          <Route
-            path="/blog"
-            element={
-              <Layout>
-                <Blog />
-              </Layout>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <Layout>
-                <Contact />
-              </Layout>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          
-          {/* Protected routes - Education Platform */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
+const App = () => {
+  const initialize = useAuthStore((state) => state.initialize);
+
+  useEffect(() => {
+    const subscription = initialize();
+    return () => subscription?.unsubscribe();
+  }, [initialize]);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public routes */}
+            <Route
+              path="/"
+              element={
                 <Layout>
-                  <Dashboard />
+                  <Home />
                 </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/library"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/about"
+              element={
                 <Layout>
-                  <Library />
+                  <About />
                 </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/services"
+              element={
                 <Layout>
-                  <Profile />
+                  <Services />
                 </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/course/:id"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/blog"
+              element={
                 <Layout>
-                  <CourseDetail />
+                  <Blog />
                 </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/video/:id"
-            element={
-              <ProtectedRoute>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
                 <Layout>
-                  <VideoPlayer />
+                  <Contact />
                 </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/pdf/:id"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <PDFViewer />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/payment"
-            element={
-              <ProtectedRoute>
-                <Payment />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            
+            {/* Protected routes - Education Platform */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/library"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Library />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Profile />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/course/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CourseDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/video/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <VideoPlayer />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pdf/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PDFViewer />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <Payment />
+                </Payment>
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
