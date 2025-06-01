@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Crown, Calendar, Video, MessageSquare, TrendingUp, Clock } from 'lucide-react';
 import { BookingForm } from './BookingForm';
+import { MarketDataWidget } from './MarketDataWidget';
 
 export const PremiumDashboard: React.FC = () => {
   const [showBookingForm, setShowBookingForm] = useState(false);
@@ -160,6 +161,12 @@ export const PremiumDashboard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Market Data Widget */}
+      <div>
+        <h2 className="text-xl font-bold mb-4">Live Market Updates</h2>
+        <MarketDataWidget />
       </div>
     </div>
   );

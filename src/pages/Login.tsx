@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
@@ -25,6 +24,8 @@ export const Login: React.FC = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
+      // Redirect will happen in signIn/signUp handlers
+      // or in the Dashboard component which has profile data
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
@@ -47,21 +48,26 @@ export const Login: React.FC = () => {
           return;
         }
 
-        const { error } = await signUp(email, password, fullName);
+        const { error: signUpError } = await signUp(email, password, fullName);
         
-        if (error) {
-          if (error.message.includes('already registered')) {
+        if (signUpError) {
+          if (signUpError.message.includes('already registered')) {
             setError('An account with this email already exists. Please sign in instead.');
           } else {
-            setError(error.message);
+            setError(signUpError.message);
           }
         } else {
-          setSuccess('Account created successfully! Please check your email for verification.');
-          setIsSignUp(false);
-          setEmail('');
-          setPassword('');
-          setFullName('');
-          setConfirmPassword('');
+          // After successful signup, automatically sign in
+          const { error: signInError } = await signIn(email, password);
+          
+          if (signInError) {
+            setError('Account created but could not sign in automatically. Please sign in manually.');
+          } else {
+            // Always navigate to dashboard first, which will check premium status
+            // and redirect to library if needed
+            console.log('Sign in successful, navigating to dashboard for profile check');
+            navigate('/dashboard');
+          }
         }
       } else {
         const { error } = await signIn(email, password);
@@ -75,6 +81,9 @@ export const Login: React.FC = () => {
             setError(error.message);
           }
         } else {
+          // Always navigate to dashboard first, which will check premium status
+          // and redirect to library if needed
+          console.log('Sign in successful, navigating to dashboard for profile check');
           navigate('/dashboard');
         }
       }

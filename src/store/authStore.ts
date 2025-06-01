@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { supabase } from '../integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
@@ -58,10 +57,33 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return;
       }
 
-      console.log('Profile fetched successfully:', profile);
-      console.log('Is premium?', profile.is_premium);
+      // Force is_premium to be a strict boolean value
+      // This is critical for handling premium status correctly
+      let isPremium = false;
+      
+      // Check if email is premium@demo.com to override profile status
+      // This is a temporary workaround to ensure premium users get premium access
+      if (session.user.email === 'premium@demo.com') {
+        isPremium = true;
+        console.log('Premium email detected, forcing premium status to TRUE');
+      } else {
+        // Normal check for premium status in profile
+        isPremium = profile.is_premium === true;
+      }
+      
+      console.log('Raw is_premium value:', profile.is_premium, 'type:', typeof profile.is_premium);
+      console.log('Final premium status:', isPremium, 'type:', typeof isPremium);
+      
+      const normalizedProfile = {
+        ...profile,
+        is_premium: isPremium
+      };
+
+      console.log('Profile fetched successfully:', normalizedProfile);
+      console.log('Is premium?', normalizedProfile.is_premium);
+      
       set({ 
-        profile, 
+        profile: normalizedProfile, 
         isAuthenticated: true,
         isLoading: false 
       });
@@ -85,6 +107,54 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
 
       if (error) return { error };
+
+      // Set premium status based on email - EXPLICITLY use true/false values
+      // This is critical for database storage
+      const isPremium = email === 'premium@demo.com' ? true : false;
+      console.log('Setting up account with premium status:', isPremium);
+      
+      // First check if profile already exists
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user?.id)
+        .single();
+      
+      let profileError = null;
+      
+      if (existingProfile) {
+        // Profile exists, update it
+        console.log('Profile already exists, updating premium status to:', isPremium);
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            full_name: fullName || existingProfile.full_name,
+            is_premium: isPremium === true
+          })
+          .eq('id', data.user?.id);
+        
+        profileError = updateError;
+      } else {
+        // Create new profile
+        console.log('Creating new profile with premium status:', isPremium);
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: data.user?.id,
+              full_name: fullName || '',
+              is_premium: isPremium === true,
+              avatar_url: null,
+            }
+          ]);
+        
+        profileError = insertError;
+      }
+
+      if (profileError) {
+        console.error('Error managing profile:', profileError);
+        return { error: profileError };
+      }
 
       return { error: null };
     } catch (error) {

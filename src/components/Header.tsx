@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { ThemeToggle } from './ThemeToggle';
 
 export const Header: React.FC = () => {
   const { user, profile } = useAuthStore();
@@ -20,6 +21,7 @@ export const Header: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <Button variant="ghost" size="icon">
             <Bell className="w-5 h-5" />
           </Button>
