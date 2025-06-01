@@ -44,7 +44,11 @@ const App = () => {
 
   useEffect(() => {
     const subscription = initialize();
-    return () => subscription?.unsubscribe();
+    return () => {
+      if (subscription && typeof subscription.unsubscribe === 'function') {
+        subscription.unsubscribe();
+      }
+    };
   }, [initialize]);
 
   return (

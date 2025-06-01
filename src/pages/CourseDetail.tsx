@@ -10,7 +10,7 @@ import { Badge } from '../components/ui/badge';
 export const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { profile } = useAuthStore();
   
   const course = mockCourses.find(c => c.id === id);
   
@@ -25,7 +25,7 @@ export const CourseDetail: React.FC = () => {
     );
   }
 
-  const canAccess = !course.isPremium || user?.isPremium;
+  const canAccess = !course.isPremium || profile?.is_premium;
 
   const handleModuleClick = (module: any) => {
     if (!canAccess) {
@@ -121,7 +121,7 @@ export const CourseDetail: React.FC = () => {
         <div className="space-y-3">
           {course.modules.map((module, index) => {
             const Icon = module.type === 'video' ? Play : FileText;
-            const isLocked = module.isPremium && !user?.isPremium;
+            const isLocked = module.isPremium && !profile?.is_premium;
             
             return (
               <div
