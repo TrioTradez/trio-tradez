@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { PremiumDashboard } from '../components/PremiumDashboard';
+import { BasicDashboard } from '../components/BasicDashboard';
 import { Library } from './Library';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,34 +58,14 @@ export const Dashboard: React.FC = () => {
   console.log('Profile is_premium value:', profile.is_premium);
   console.log('Final premium status decision:', isPremium);
 
-  // Effect to handle routing based on account type
-  useEffect(() => {
-    if (profile) {
-      if (isPremium) {
-        console.log('Premium user confirmed - staying on dashboard');
-        // Stay on dashboard
-      } else {
-        console.log('Basic user detected, redirecting to library');
-        navigate('/library');
-      }
-    }
-  }, [profile, isPremium, navigate]);
+  // No longer need to redirect - we render the appropriate dashboard based on account type
 
-  // For premium users, immediately render the PremiumDashboard
-  // This is a direct render that bypasses any other checks
+  // Render the appropriate dashboard based on user type
   if (isEmailPremium || profile?.is_premium === true) {
-    console.log('Premium account confirmed - rendering PremiumDashboard directly');
+    console.log('Premium account confirmed - rendering PremiumDashboard');
     return <PremiumDashboard />;
+  } else {
+    console.log('Basic account confirmed - rendering BasicDashboard');
+    return <BasicDashboard />;
   }
-
-  // This will only render temporarily until the redirect happens
-  console.log('Rendering loading state while redirecting basic user');
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Redirecting to your content library...</p>
-      </div>
-    </div>
-  );
 };
