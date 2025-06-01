@@ -12,9 +12,9 @@ interface CourseCardProps {
 }
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
-  const { profile } = useAuthStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
-  const canAccess = !course.isPremium || profile?.is_premium;
+  const canAccess = !course.isPremium || user?.isPremium;
 
   const handleClick = () => {
     if (canAccess) {

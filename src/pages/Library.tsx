@@ -9,7 +9,7 @@ import { useAuthStore } from '../store/authStore';
 
 export const Library: React.FC = () => {
   const navigate = useNavigate();
-  const { profile } = useAuthStore();
+  const { user } = useAuthStore();
 
   const basicContent = [
     {
@@ -92,10 +92,10 @@ export const Library: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold">Learning Library</h1>
           <p className="text-muted-foreground mt-2">
-            {profile?.is_premium ? 'Access all premium content' : 'Basic plan content - upgrade for more'}
+            {user?.isPremium ? 'Access all premium content' : 'Basic plan content - upgrade for more'}
           </p>
         </div>
-        {!profile?.is_premium && (
+        {!user?.isPremium && (
           <Button 
             onClick={handleUpgrade}
             className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
@@ -111,19 +111,19 @@ export const Library: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-lg">
-              {profile?.is_premium ? 'Premium Plan' : 'Basic Plan'}
+              {user?.isPremium ? 'Premium Plan' : 'Basic Plan'}
             </h3>
             <p className="text-muted-foreground">
-              {profile?.is_premium 
+              {user?.isPremium 
                 ? 'You have access to all content and features' 
                 : 'Upgrade to unlock advanced content and 1-on-1 sessions'
               }
             </p>
           </div>
           <Badge 
-            className={profile?.is_premium ? 'bg-yellow-500 text-black' : 'bg-primary text-white'}
+            className={user?.isPremium ? 'bg-yellow-500 text-black' : 'bg-primary text-white'}
           >
-            {profile?.is_premium ? 'Premium' : 'Basic'}
+            {user?.isPremium ? 'Premium' : 'Basic'}
           </Badge>
         </div>
       </div>
@@ -166,7 +166,7 @@ export const Library: React.FC = () => {
       </div>
 
       {/* Premium Content Preview */}
-      {!profile?.is_premium && (
+      {!user?.isPremium && (
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Premium Content</h2>

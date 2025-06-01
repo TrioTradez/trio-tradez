@@ -44,11 +44,7 @@ const App = () => {
 
   useEffect(() => {
     const subscription = initialize();
-    return () => {
-      if (subscription && typeof subscription.unsubscribe === 'function') {
-        subscription.unsubscribe();
-      }
-    };
+    return () => subscription?.unsubscribe();
   }, [initialize]);
 
   return (
@@ -166,9 +162,8 @@ const App = () => {
               path="/payment"
               element={
                 <ProtectedRoute>
-                  <Layout>
-                    <Payment />
-                  </Layout>
+                  <Payment />
+                </Payment>
                 </ProtectedRoute>
               }
             />
