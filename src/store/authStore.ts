@@ -23,6 +23,7 @@ interface AuthState {
   signOut: () => Promise<void>;
   upgradeToPremium: () => Promise<void>;
   initialize: () => any;
+  fetchProfile: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -31,6 +32,38 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   profile: null,
   isAuthenticated: false,
   isLoading: true,
+
+  fetchProfile: async () => {
+    const { session } = get();
+    if (!session?.user) return;
+
+    try {
+      console.log('Fetching profile for user:', session.user.id);
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found, user might need to complete setup');
+        }
+        return;
+      }
+
+      console.log('Profile fetched:', profile);
+      set({ 
+        profile, 
+        isAuthenticated: true,
+        isLoading: false 
+      });
+    } catch (error) {
+      console.error('Profile fetch error:', error);
+      set({ isLoading: false });
+    }
+  },
 
   signUp: async (email: string, password: string, fullName?: string) => {
     try {
@@ -62,6 +95,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
 
       if (error) return { error };
+
+      // After successful sign in, fetch the profile immediately
+      if (data.session?.user) {
+        console.log('Sign in successful, fetching profile...');
+        setTimeout(() => {
+          get().fetchProfile();
+        }, 100);
+      }
 
       return { error: null };
     } catch (error) {
@@ -109,34 +150,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session);
+        console.log('Auth state changed:', event, session?.user?.email);
         
         set({ session, user: session?.user ?? null });
 
         if (session?.user) {
-          // Fetch user profile
-          setTimeout(async () => {
-            try {
-              const { data: profile, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
-
-              if (error && error.code !== 'PGRST116') {
-                console.error('Error fetching profile:', error);
-              }
-
-              set({ 
-                profile, 
-                isAuthenticated: true,
-                isLoading: false 
-              });
-            } catch (error) {
-              console.error('Profile fetch error:', error);
-              set({ isLoading: false });
-            }
-          }, 0);
+          // Fetch user profile with a small delay to ensure the session is fully established
+          setTimeout(() => {
+            get().fetchProfile();
+          }, 200);
         } else {
           set({ 
             profile: null, 
@@ -149,9 +171,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session?.user?.email);
       set({ session, user: session?.user ?? null });
       
-      if (!session) {
+      if (session?.user) {
+        get().fetchProfile();
+      } else {
         set({ isLoading: false });
       }
     });
