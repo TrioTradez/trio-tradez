@@ -22,7 +22,7 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   upgradeToPremium: () => Promise<void>;
-  initialize: () => void;
+  initialize: () => any;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             full_name: fullName || '',
           }
@@ -109,6 +109,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session);
+        
         set({ session, user: session?.user ?? null });
 
         if (session?.user) {
