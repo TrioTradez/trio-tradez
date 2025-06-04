@@ -21,14 +21,13 @@ export const Login: React.FC = () => {
   const { signIn, signUp, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      // Redirect will happen in signIn/signUp handlers
-      // or in the Dashboard component which has profile data
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated && !window.location.pathname.includes('/select-subscription')) {
+  //     // This was causing a premature redirect for new users before they hit /select-subscription.
+  //     // Navigation is handled by handleSubmit or by protected routes.
+  //     // navigate('/dashboard'); 
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,10 +62,9 @@ export const Login: React.FC = () => {
           if (signInError) {
             setError('Account created but could not sign in automatically. Please sign in manually.');
           } else {
-            // Always navigate to dashboard first, which will check premium status
-            // and redirect to library if needed
-            console.log('Sign in successful, navigating to dashboard for profile check');
-            navigate('/dashboard');
+            // Navigate to subscription selection page after successful sign-up & sign-in
+            console.log('Sign up and sign in successful, navigating to subscription selection');
+            navigate('/select-subscription');
           }
         }
       } else {
@@ -95,14 +93,6 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleAccountTypeSelect = (type: 'basic' | 'premium') => {
-    setIsSignUp(true);
-    if (type === 'premium') {
-      setEmail('premium@demo.com');
-    } else {
-      setEmail('basic@demo.com');
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-background to-background/80">
@@ -165,37 +155,6 @@ export const Login: React.FC = () => {
             </Alert>
           )}
 
-          {!isSignUp && (
-            <>
-              {/* Account Type Selection */}
-              <div className="space-y-3 mb-6">
-                <Button
-                  onClick={() => handleAccountTypeSelect('basic')}
-                  variant="outline"
-                  className="w-full group relative overflow-hidden"
-                >
-                  <span className="relative z-10">Basic Account</span>
-                  <div className="absolute inset-0 bg-primary/10 transform translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
-                </Button>
-                <Button
-                  onClick={() => handleAccountTypeSelect('premium')}
-                  className="w-full trading-gradient text-white group relative overflow-hidden"
-                >
-                  <span className="relative z-10">Premium Account</span>
-                  <div className="absolute inset-0 bg-white/10 transform translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
-                </Button>
-              </div>
-
-              <div className="relative mb-6">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">Or continue with email</span>
-                </div>
-              </div>
-            </>
-          )}
 
           {/* Auth Form */}
           <form onSubmit={handleSubmit} className="space-y-4">

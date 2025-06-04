@@ -25,7 +25,8 @@ import {
   Award,
   Star,
   Trophy,
-  History
+  History,
+  Calculator // Added missing icon
 } from 'lucide-react';
 
 export const BasicDashboard: React.FC = () => {
@@ -151,7 +152,8 @@ export const BasicDashboard: React.FC = () => {
   ];
 
   const handleUpgrade = () => {
-    navigate('/payment');
+    // Navigate to subscription selection to allow choosing/confirming Premium before payment
+    navigate('/select-subscription'); 
   };
 
   return (
@@ -555,5 +557,3 @@ export const BasicDashboard: React.FC = () => {
   );
 };
 
-// Missing import - add Calculator icon
-import { Calculator } from 'lucide-react';

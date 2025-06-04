@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { PremiumDashboard } from '../components/PremiumDashboard';
-import { BasicDashboard } from '../components/BasicDashboard';
-import { Library } from './Library';
+import { BasicDashboard } from '../components/BasicDashboard'; // Basic users will see this
 import { useNavigate } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
@@ -43,29 +42,18 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  // We need to check the user email from the session
-  const { session } = useAuthStore();
-  const userEmail = session?.user?.email;
-  
-  // Check if user has premium email
-  const isEmailPremium = userEmail === 'premium@demo.com';
-  
-  // Force premium status if email is premium@demo.com
-  const isPremium = isEmailPremium || profile.is_premium === true;
-  
-  console.log('Profile data received in Dashboard:', profile);
-  console.log('Email check - isPremium:', isEmailPremium);
-  console.log('Profile is_premium value:', profile.is_premium);
-  console.log('Final premium status decision:', isPremium);
+  // The profile.is_premium field is now the single source of truth.
+  // It's set after the user makes a choice on SubscriptionSelection.tsx.
 
-  // No longer need to redirect - we render the appropriate dashboard based on account type
+  console.log('Dashboard: Profile loaded. is_premium:', profile.is_premium);
 
-  // Render the appropriate dashboard based on user type
-  if (isEmailPremium || profile?.is_premium === true) {
-    console.log('Premium account confirmed - rendering PremiumDashboard');
+  if (profile.is_premium === true) {
+    console.log('Dashboard: User is premium. Rendering PremiumDashboard.');
     return <PremiumDashboard />;
   } else {
-    console.log('Basic account confirmed - rendering BasicDashboard');
+    // If is_premium is false (either new user default or selected Basic)
+    // render the BasicDashboard.
+    console.log('Dashboard: User is basic. Rendering BasicDashboard.');
     return <BasicDashboard />;
   }
 };

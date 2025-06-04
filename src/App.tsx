@@ -19,6 +19,7 @@ import { CourseDetail } from "./pages/CourseDetail";
 import { VideoPlayer } from "./pages/VideoPlayer";
 import { PDFViewer } from "./pages/PDFViewer";
 import { Payment } from "./pages/Payment";
+import SubscriptionSelection from "./pages/SubscriptionSelection";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 
@@ -100,6 +101,16 @@ const App = () => {
               }
             />
             <Route path="/login" element={<Login />} />
+
+            {/* Route for subscription selection - should be protected */}
+            <Route 
+              path="/select-subscription"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionSelection />
+                </ProtectedRoute>
+              }
+            />
             
             {/* Protected routes - Education Platform */}
             <Route

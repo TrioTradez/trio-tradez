@@ -21,6 +21,7 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   upgradeToPremium: () => Promise<void>;
+  updateSubscription: (isPremiumChoice: boolean) => Promise<{ error: any } | undefined>;
   initialize: () => any;
   fetchProfile: () => Promise<void>;
 }
@@ -108,10 +109,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       if (error) return { error };
 
-      // Set premium status based on email - EXPLICITLY use true/false values
-      // This is critical for database storage
-      const isPremium = email === 'premium@demo.com' ? true : false;
-      console.log('Setting up account with premium status:', isPremium);
+      // Default new accounts to non-premium status. Subscription will be chosen later.
+      const isPremium = false;
+      console.log('Setting up account with default non-premium status.');
       
       // First check if profile already exists
       const { data: existingProfile } = await supabase
@@ -129,7 +129,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           .from('profiles')
           .update({
             full_name: fullName || existingProfile.full_name,
-            is_premium: isPremium === true
+            is_premium: isPremium, // This will be false by default now
+            updated_at: new Date().toISOString()
           })
           .eq('id', data.user?.id);
         
@@ -143,7 +144,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             {
               id: data.user?.id,
               full_name: fullName || '',
-              is_premium: isPremium === true,
+              is_premium: isPremium, // This will be false by default now
               avatar_url: null,
             }
           ]);
@@ -195,6 +196,37 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       console.error('Sign in error:', error);
       return { error };
+    }
+  },
+
+  updateSubscription: async (isPremiumChoice: boolean) => {
+    const { user, profile, fetchProfile } = get();
+    if (!user || !profile) {
+      console.error('User or profile not available for subscription update');
+      return { error: { message: 'User not authenticated or profile missing.' } };
+    }
+    try {
+      set({ isLoading: true });
+      const { error } = await supabase
+        .from('profiles')
+        .update({ is_premium: isPremiumChoice, updated_at: new Date().toISOString() })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error updating subscription:', error);
+        set({ isLoading: false });
+        return { error };
+      }
+
+      // Re-fetch profile to get the updated status and set isLoading to false
+      await fetchProfile(); 
+      return { error: null };
+    } catch (error) {
+      console.error('Subscription update error:', error);
+      set({ isLoading: false });
+      // Ensure error is an object with a message property for consistency
+      const err = error instanceof Error ? error : { message: String(error) };
+      return { error: err };
     }
   },
 
