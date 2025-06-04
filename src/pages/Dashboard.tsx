@@ -14,6 +14,15 @@ export const Dashboard: React.FC = () => {
     fetchProfile();
   }, [fetchProfile]);
 
+  useEffect(() => {
+    // If profile is loaded and subscription status is undefined/null, redirect to subscription selection
+    if (!isLoading && profile && profile.is_premium === null) {
+      console.log('User has no subscription status, redirecting to subscription selection');
+      navigate('/select-subscription');
+      return;
+    }
+  }, [profile, isLoading, navigate]);
+
   console.log('Dashboard render - Full Profile:', profile);
   console.log('Is premium check:', profile?.is_premium);
   console.log('Loading state:', isLoading);
@@ -42,6 +51,18 @@ export const Dashboard: React.FC = () => {
     );
   }
 
+  // If subscription status is null/undefined, show loading while the useEffect handles redirect
+  if (profile.is_premium === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Checking subscription status...</p>
+        </div>
+      </div>
+    );
+  }
+
   // The profile.is_premium field is now the single source of truth.
   // It's set after the user makes a choice on SubscriptionSelection.tsx.
 
@@ -51,8 +72,7 @@ export const Dashboard: React.FC = () => {
     console.log('Dashboard: User is premium. Rendering PremiumDashboard.');
     return <PremiumDashboard />;
   } else {
-    // If is_premium is false (either new user default or selected Basic)
-    // render the BasicDashboard.
+    // If is_premium is false (selected Basic)
     console.log('Dashboard: User is basic. Rendering BasicDashboard.');
     return <BasicDashboard />;
   }

@@ -39,11 +39,13 @@ export const Login: React.FC = () => {
       if (isSignUp) {
         if (password !== confirmPassword) {
           setError('Passwords do not match');
+          setIsLoading(false);
           return;
         }
 
         if (password.length < 6) {
           setError('Password must be at least 6 characters long');
+          setIsLoading(false);
           return;
         }
 
@@ -55,12 +57,14 @@ export const Login: React.FC = () => {
           } else {
             setError(signUpError.message);
           }
+          setIsLoading(false);
         } else {
           // After successful signup, automatically sign in
           const { error: signInError } = await signIn(email, password);
           
           if (signInError) {
             setError('Account created but could not sign in automatically. Please sign in manually.');
+            setIsLoading(false);
           } else {
             // Navigate to subscription selection page after successful sign-up & sign-in
             console.log('Sign up and sign in successful, navigating to subscription selection');
@@ -68,6 +72,7 @@ export const Login: React.FC = () => {
           }
         }
       } else {
+        // Handle normal sign in
         const { error } = await signIn(email, password);
         
         if (error) {
@@ -78,17 +83,16 @@ export const Login: React.FC = () => {
           } else {
             setError(error.message);
           }
+          setIsLoading(false);
         } else {
-          // Always navigate to dashboard first, which will check premium status
-          // and redirect to library if needed
-          console.log('Sign in successful, navigating to dashboard for profile check');
+          // Navigate to dashboard, which will check subscription status
+          console.log('Sign in successful, navigating to dashboard');
           navigate('/dashboard');
         }
       }
     } catch (error) {
       console.error('Authentication error:', error);
       setError('An unexpected error occurred. Please try again.');
-    } finally {
       setIsLoading(false);
     }
   };

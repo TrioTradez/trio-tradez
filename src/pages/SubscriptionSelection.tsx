@@ -32,14 +32,14 @@ const SubscriptionSelection: React.FC = () => {
       return;
     }
 
-    // If the profile is loaded and the user is already premium,
-    // they don't need to select a subscription again.
-    if (profile && profile.is_premium === true) {
-      console.log('User is already premium, redirecting to dashboard.');
+    // If the profile is loaded and the user has already selected a subscription (true or false),
+    // redirect them to dashboard
+    if (profile && profile.is_premium !== null) {
+      console.log('User already has a subscription status, redirecting to dashboard.');
       navigate('/dashboard');
+      return;
     }
-    // If profile.is_premium is false, user stays on this page to choose/confirm.
-    // This covers new users (default false) and those who previously chose Basic.
+    // If profile.is_premium is null, user stays on this page to choose subscription
   }, [isAuthenticated, profile, authLoading, navigate, fetchProfile]);
 
   const handleSelectSubscription = (planName: string, planPrice: string, isPremiumChoice: boolean) => {

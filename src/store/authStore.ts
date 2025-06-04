@@ -58,18 +58,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         return;
       }
 
-      // Force is_premium to be a strict boolean value
-      // This is critical for handling premium status correctly
-      let isPremium = false;
+      // For new users, is_premium will be null
+      // For existing users, maintain their subscription status
+      let isPremium = profile.is_premium;
       
-      // Check if email is premium@demo.com to override profile status
-      // This is a temporary workaround to ensure premium users get premium access
+      // Special case for demo premium account
       if (session.user.email === 'premium@demo.com') {
         isPremium = true;
         console.log('Premium email detected, forcing premium status to TRUE');
-      } else {
-        // Normal check for premium status in profile
-        isPremium = profile.is_premium === true;
       }
       
       console.log('Raw is_premium value:', profile.is_premium, 'type:', typeof profile.is_premium);
@@ -109,9 +105,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       if (error) return { error };
 
-      // Default new accounts to non-premium status. Subscription will be chosen later.
-      const isPremium = false;
-      console.log('Setting up account with default non-premium status.');
+      // Set initial subscription status as null to force subscription selection
+      const isPremium = null;
+      console.log('Setting up account with null subscription status to force selection.');
       
       // First check if profile already exists
       const { data: existingProfile } = await supabase
