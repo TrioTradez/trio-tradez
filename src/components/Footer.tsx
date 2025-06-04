@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 export const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -86,10 +86,16 @@ export const Footer: React.FC = () => {
             © 2025 TrioTradez. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+            <a href="https://drive.google.com/file/d/1V3W_n5-iaedVuQMvHyozmn92KU1XrOlx/view?usp=drive_link" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-muted-foreground hover:text-foreground">
               Privacy Policy
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+            <a href="https://drive.google.com/file/d/1ft7KsebX-r1a9FlKtTe_tQEfh7mGncN8/view?usp=drive_link" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-muted-foreground hover:text-foreground">
               Terms of Service
             </a>
           </div>
