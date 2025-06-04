@@ -85,9 +85,17 @@ export const Login: React.FC = () => {
           }
           setIsLoading(false);
         } else {
-          // Navigate to dashboard, which will check subscription status
-          console.log('Sign in successful, navigating to dashboard');
-          navigate('/dashboard');
+          // Wait for profile to be loaded and check subscription status
+          await new Promise(resolve => setTimeout(resolve, 500)); // Small delay to ensure profile is loaded
+          const profile = useAuthStore.getState().profile;
+          
+          if (profile?.is_premium === null) {
+            console.log('User has no subscription, redirecting to subscription selection');
+            navigate('/select-subscription');
+          } else {
+            console.log('User has subscription status, navigating to dashboard');
+            navigate('/dashboard');
+          }
         }
       }
     } catch (error) {

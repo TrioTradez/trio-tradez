@@ -14,20 +14,9 @@ export const Dashboard: React.FC = () => {
     fetchProfile();
   }, [fetchProfile]);
 
-  useEffect(() => {
-    // If profile is loaded and subscription status is undefined/null, redirect to subscription selection
-    if (!isLoading && profile && profile.is_premium === null) {
-      console.log('User has no subscription status, redirecting to subscription selection');
-      navigate('/select-subscription');
-      return;
-    }
-  }, [profile, isLoading, navigate]);
-
-  console.log('Dashboard render - Full Profile:', profile);
-  console.log('Is premium check:', profile?.is_premium);
-  console.log('Loading state:', isLoading);
-
-  if (isLoading) {
+  // Early return with loading state if we don't have profile data
+  // or if subscription check hasn't completed
+  if (isLoading || !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -38,21 +27,9 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  // Ensure profile exists before checking premium status
-  if (!profile) {
-    console.log('No profile found, fetching again...');
-    fetchProfile();
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground">Loading profile...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // If subscription status is null/undefined, show loading while the useEffect handles redirect
+  // Immediate redirect if subscription status is null
   if (profile.is_premium === null) {
+    navigate('/select-subscription');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -63,17 +40,6 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  // The profile.is_premium field is now the single source of truth.
-  // It's set after the user makes a choice on SubscriptionSelection.tsx.
-
-  console.log('Dashboard: Profile loaded. is_premium:', profile.is_premium);
-
-  if (profile.is_premium === true) {
-    console.log('Dashboard: User is premium. Rendering PremiumDashboard.');
-    return <PremiumDashboard />;
-  } else {
-    // If is_premium is false (selected Basic)
-    console.log('Dashboard: User is basic. Rendering BasicDashboard.');
-    return <BasicDashboard />;
-  }
+  // Only render dashboard content if we have a valid subscription status
+  return profile.is_premium ? <PremiumDashboard /> : <BasicDashboard />;
 };
