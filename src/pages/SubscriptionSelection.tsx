@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { CheckCircle, XCircle, Zap, ShieldCheck, BookOpen, BarChart3 } from 'lucide-react';
+import { CheckCircle, XCircle, Zap, ShieldCheck, BookOpen, BarChart3, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { motion } from 'framer-motion';
 
@@ -14,11 +14,18 @@ const SubscriptionSelection: React.FC = () => {
     isAuthenticated,
     isLoading: authLoading,
     updateSubscription,
-    fetchProfile
+    fetchProfile,
+    signOut
   } = useAuthStore();
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleBack = async () => {
+    // Sign out and navigate to login
+    await signOut();
+    navigate('/login');
+  };
 
   useEffect(() => {
     // Ensure profile is loaded before making decisions
@@ -53,7 +60,6 @@ const SubscriptionSelection: React.FC = () => {
         isPremiumChoice
       }
     });
-    // setIsProcessing(false); // Processing state might be better handled on the payment page or if actual async work was done here
   };
 
   if (authLoading || profile === null) {
@@ -88,6 +94,24 @@ const SubscriptionSelection: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-background to-background/80">
+      {/* Back Button */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        className="absolute top-4 left-4 z-10"
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleBack}
+          className="flex items-center gap-2 text-muted-foreground/70 hover:text-white hover:bg-primary/20 hover:translate-x-[-2px] transition-all duration-200 ease-in-out group"
+        >
+          <ArrowLeft className="w-5 h-5 group-hover:text-primary group-hover:scale-110" />
+          <span className="font-semibold">Back to Login</span>
+        </Button>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
