@@ -20,21 +20,13 @@ export const Footer: React.FC = () => {
     path: '/contact'
   }];
   const socialLinks = [{
-    icon: Facebook,
-    href: '#',
-    label: 'Facebook'
-  }, {
     icon: Twitter,
-    href: '#',
-    label: 'Twitter'
+    href: 'https://x.com/triotradez?s=21',
+    label: 'X'
   }, {
     icon: Instagram,
-    href: '#',
+    href: 'https://www.instagram.com/trio_tradez?igsh=dGh4ZWp0anVsMGh0&utm_source=qr',
     label: 'Instagram'
-  }, {
-    icon: Linkedin,
-    href: '#',
-    label: 'LinkedIn'
   }];
   return <footer className="bg-card/80 backdrop-blur-sm border-t border-border mt-16">
       <div className="container mx-auto px-4 sm:px-6 py-12">
